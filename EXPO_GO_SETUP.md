@@ -1,130 +1,89 @@
-# Expo Go Development Setup
+# 📱 Testing with Expo Go - Quick Setup
 
-This Habit Hero app has been configured for Expo Go compatibility. Follow these steps to run the app in Expo Go.
+## ✅ **Current Status**
+Your app is now running in **Expo Go mode** which is perfect for testing before App Store submission!
 
-## Prerequisites
+## 📱 **How to Test Your App**
 
-1. Install Expo Go app on your mobile device:
-   - [iOS App Store](https://apps.apple.com/app/expo-go/id982107779)
-   - [Google Play Store](https://play.google.com/store/apps/details?id=host.exp.exponent)
+### **Option 1: Test on Your Phone (Recommended)**
+1. **Download Expo Go** from the App Store
+2. **Scan the QR code** that appears in your terminal
+3. **Your app will open** in Expo Go
 
-2. Ensure you have Node.js and bun installed on your development machine.
+### **Option 2: Test on iOS Simulator**
+1. **Press `i`** in the terminal to open iOS simulator
+2. **Install Expo Go** in the simulator if needed
+3. **Scan the QR code** or use the development URL
 
-## Development Commands
+### **Option 3: Test on Web**
+1. **Press `w`** in the terminal to open in web browser
+2. **Test basic functionality** (some features may not work on web)
 
-### Start Development Server
-```bash
-# Start with Expo Go (recommended for development)
-bun run start:go
+## 🧪 **What to Test**
 
-# Start with cache cleared
-bun run start:go-clear
+### **Core Functionality**
+- [ ] App launches successfully
+- [ ] Onboarding screen works
+- [ ] Can add habits (up to 3 on free plan)
+- [ ] Can complete habits
+- [ ] Settings screen works
+- [ ] Theme switching works
+- [ ] Navigation works smoothly
 
-# Standard start (shows QR code for Expo Go)
-bun run start
+### **Pro Features (Simulated)**
+- [ ] Analytics screen opens (shows upgrade prompt)
+- [ ] Data export shows upgrade prompt
+- [ ] Subscription plans display correctly
 
-# Clear cache and start
-bun run start:clear
-```
+### **UI/UX**
+- [ ] All screens look good
+- [ ] Animations are smooth
+- [ ] No crashes or errors
+- [ ] Text is readable
+- [ ] Buttons work properly
 
-### Health Checks
-```bash
-# Check for compatibility issues
-bun run doctor
+## ⚠️ **Limitations in Expo Go**
 
-# Check dependency versions
-bun run check-deps
-```
+**What works:**
+- ✅ All UI and navigation
+- ✅ Local data storage
+- ✅ Theme switching
+- ✅ Habit tracking
+- ✅ Settings and preferences
 
-## Connecting to Expo Go
+**What doesn't work:**
+- ❌ Real in-app purchases (subscriptions)
+- ❌ Camera/microphone permissions
+- ❌ Some native features
 
-1. Start the development server:
-   ```bash
-   bun run start:go
-   ```
+**Note:** This is normal! For testing subscriptions, you'll need to build a development build or test in production.
 
-2. On your mobile device:
-   - **iOS**: Open Camera app and scan the QR code
-   - **Android**: Open Expo Go app and scan the QR code
+## 🚀 **Next Steps After Testing**
 
-3. The app will load in Expo Go on your device
+Once you've tested the core functionality:
 
-## Features Available in Expo Go
+1. **Fix any issues** you find
+2. **Deploy your backend** (for subscription testing)
+3. **Set up App Store Connect** (for real subscription testing)
+4. **Build for production** when ready
 
-✅ **Working Features:**
-- Habit tracking and management
-- Dashboard with statistics
-- Settings and theme switching
-- Navigation between screens
-- Data persistence with AsyncStorage
-- Notifications (basic)
-- Camera access (via expo-camera)
-- Audio recording (via expo-av)
+## 🐛 **Common Issues & Solutions**
 
-❌ **Removed for Expo Go Compatibility:**
-- Custom native security checks
-- Advanced chart libraries (Victory Native)
-- Native vision camera features
-- MMKV storage
-- Skia graphics
-- iOS-specific native modules
+### **Issue: App doesn't load**
+- **Solution**: Make sure Expo Go is installed and you're on the same network
+- **Try**: Restart the development server
 
-## Troubleshooting
+### **Issue: Some features don't work**
+- **Solution**: This is normal in Expo Go - some native features require a development build
 
-### Common Issues
+### **Issue: App crashes**
+- **Solution**: Check the terminal for error messages and fix the code
 
-1. **Metro bundler cache issues**
-   ```bash
-   bun run start:clear
-   ```
+## 📞 **Need Help?**
 
-2. **Dependency version conflicts**
-   ```bash
-   bun run check-deps
-   npx expo install --fix
-   ```
+If you encounter any issues:
+1. Check the terminal output for error messages
+2. Look at the Expo Go logs
+3. Restart the development server if needed
 
-3. **Asset loading issues**
-   - Ensure all assets are in the correct format
-   - Check that asset paths in app.json are correct
-
-4. **Network connectivity**
-   - Ensure your development machine and mobile device are on the same network
-   - Try using tunnel mode: `npx expo start --tunnel`
-
-### Development Tips
-
-- Use the shake gesture in Expo Go to access the developer menu
-- Enable "Fast Refresh" for instant code updates
-- Use the console in your development environment to see logs
-- Test on both iOS and Android devices when possible
-
-## Production Build
-
-When ready for production, you'll need to create a development build or use EAS Build:
-
-```bash
-# Install EAS CLI
-npm install -g @expo/eas-cli
-
-# Configure and build
-eas build:configure
-eas build --platform all
-```
-
-## Environment Variables
-
-The app uses environment variables for API keys. In Expo Go, these are loaded from the `.env` file in the project root.
-
-Make sure to set:
-- `EXPO_PUBLIC_VIBECODE_OPENAI_API_KEY`
-- `EXPO_PUBLIC_VIBECODE_ANTHROPIC_API_KEY`
-- Other API keys as needed
-
-## Support
-
-If you encounter issues:
-1. Check the Expo Go logs in the app
-2. Review the Metro bundler output
-3. Run `bun run doctor` to check for configuration issues
-4. Consult the [Expo documentation](https://docs.expo.dev/)
+**Your app is ready for testing!** 🎉

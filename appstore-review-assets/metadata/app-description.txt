@@ -1,0 +1,46 @@
+# Habit Hero - App Store Description
+
+## App Name
+Habit Hero
+
+## Subtitle
+Level up your Habits
+
+## Description
+Transform your daily routines into an epic adventure. Build habits like a superhero with gamified tracking, pixel-perfect progress, and power-ups that keep you motivated.
+
+Habit Hero makes habit building fun and engaging with:
+• Gamified progress tracking with XP and achievements
+• Beautiful retro-style charts and visualizations
+• Superhero-themed journey to transform yourself
+• Unlimited habits with Pro subscription
+• Detailed analytics and insights
+• Data export and backup functionality
+• Dark and light theme support
+
+Perfect for anyone looking to build lasting habits in a fun, motivating way.
+
+## Keywords
+habits, productivity, gamification, tracking, goals, self-improvement, routine, motivation, progress, analytics
+
+## Promotional Text
+🎯 Level up your habits with Habit Hero! Transform your daily routines into an epic adventure with gamified tracking, beautiful progress charts, and superhero-themed motivation. Build lasting habits that stick!
+
+## What's New
+• Complete habit tracking system
+• Gamified progress with XP and achievements
+• Beautiful analytics and insights
+• Pro subscription with unlimited habits
+• Data export and backup
+• Dark/light theme support
+• Privacy-first design
+
+## App Store Review Notes
+This app includes a landing page for review purposes at: appstore-review-assets/landing-page/index.html
+
+The app features:
+- Real Apple Store subscription integration
+- Local data storage (privacy-first)
+- Comprehensive habit tracking
+- Professional UI/UX design
+- Complete onboarding flow

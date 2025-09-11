@@ -9,6 +9,7 @@ import { getTheme, habitColors, colorGroups } from '../utils/theme';
 import ColorPicker from '../components/ColorPicker';
 import { showSuccessNotification, showErrorNotification, showHabitNotification, showWarningNotification, showNotification } from '../components/NotificationManager';
 import { useProFeatures } from '../utils/proFeatures';
+import { paymentService } from '../services/paymentService';
 
 interface SettingsScreenProps {
   navigation: any;
@@ -153,6 +154,36 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation, route }) =>
       ]
     );
   };
+
+  const handleRestorePurchases = async () => {
+    try {
+      showNotification({
+        title: 'Restoring Purchases',
+        message: 'Please wait while we restore your purchases...',
+        type: 'info',
+      });
+
+      // Initialize payment service if not already done
+      const isInitialized = await paymentService.initialize();
+      if (!isInitialized) {
+        throw new Error('Payment service initialization failed');
+      }
+
+      // Restore purchases
+      await paymentService.restorePurchases();
+      
+      showSuccessNotification(
+        'Purchases Restored',
+        'Your previous purchases have been restored successfully.'
+      );
+    } catch (error) {
+      console.error('Restore purchases error:', error);
+      showErrorNotification(
+        'Restore Failed',
+        'Unable to restore purchases. Please try again or contact support.'
+      );
+    }
+  };
   
   const SettingRow = ({ 
     icon, 
@@ -268,6 +299,13 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation, route }) =>
                     </View>
                   ) : undefined
                 }
+              />
+              
+              <SettingRow
+                icon="refresh-outline"
+                title="Restore Purchases"
+                subtitle="Restore your previous purchases"
+                onPress={handleRestorePurchases}
               />
             </View>
           </View>

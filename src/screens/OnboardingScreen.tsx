@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, Pressable, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ScrollView, Pressable, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useHabitStore } from '../state/habitStore';
 import { getTheme } from '../utils/theme';
 import { SubscriptionStatus } from '../types/habit';
 import { initializeSampleData } from '../utils/sampleData';
+import { paymentService } from '../services/paymentService';
 
 interface OnboardingScreenProps {
   navigation: any;
@@ -80,29 +81,37 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
     setIsProcessing(true);
     
     try {
-      // In a real app, this would integrate with actual payment processing
-      // For demo purposes, we'll simulate the subscription process
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Initialize payment service if not already done
+      const isInitialized = await paymentService.initialize();
+      if (!isInitialized) {
+        throw new Error('Payment service initialization failed');
+      }
+
+      // Map plan ID to product ID
+      const productId = planId === 'monthly' 
+        ? 'com.vibecode.habithero.monthly'
+        : 'com.vibecode.habithero.lifetime';
+
+      // Attempt to purchase the product
+      const result = await paymentService.purchaseProduct(productId);
       
-      updateSubscription(planId);
-      completeOnboarding();
-      
-      // Add sample data after subscription and onboarding completion
-      setTimeout(() => {
-        initializeSampleData();
-      }, 100);
-      
-      Alert.alert(
-        'Subscription Successful!',
-        `Welcome to Habit Hero Pro! Your ${planId === 'monthly' ? 'monthly' : 'lifetime'} subscription is now active.`,
-        [
-          {
-            text: 'Get Started',
-            onPress: () => navigation.replace('Main'),
-          },
-        ]
-      );
+      if (result.responseCode === 0) { // IAPResponseCode.OK
+        // Purchase successful - the payment service will handle the rest
+        completeOnboarding();
+        
+        // Add sample data after subscription and onboarding completion
+        setTimeout(() => {
+          initializeSampleData();
+        }, 100);
+        
+        // Navigate to main screen
+        navigation.replace('Main');
+      } else {
+        // Purchase failed - show error message
+        throw new Error('Purchase failed');
+      }
     } catch (error) {
+      console.error('Subscription error:', error);
       Alert.alert(
         'Subscription Failed',
         'There was an issue processing your subscription. Please try again.',

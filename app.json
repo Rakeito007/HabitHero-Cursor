@@ -6,7 +6,6 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-
     "icon": "./assets/icon.png",
     "description": "Build lasting habits with your personal AI coach. Track progress, get insights, and achieve your goals with Habit Hero's minimalist approach to habit formation.",
     "splash": {
@@ -58,7 +57,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "habit-hero-vibecode"
+        "projectId": "924fc6a4-56e5-461e-8fc9-7d8468c895b1"
       }
     }
   }
