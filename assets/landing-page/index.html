@@ -25,7 +25,7 @@
         }
 
         .logo {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: bold;
             margin-bottom: 2rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
@@ -55,47 +55,6 @@
             font-size: 1.2rem;
             font-weight: bold;
             letter-spacing: 2px;
-        }
-
-        .countdown-container {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 3rem;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .countdown-title {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .countdown {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .countdown-item {
-            text-align: center;
-        }
-
-        .countdown-number {
-            font-size: 3rem;
-            font-weight: bold;
-            display: block;
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
-            padding: 1rem;
-            min-width: 80px;
-        }
-
-        .countdown-label {
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-            opacity: 0.8;
         }
 
         .cta-section {
@@ -189,16 +148,6 @@
                 font-size: 1.2rem;
             }
             
-            .countdown {
-                gap: 1rem;
-            }
-            
-            .countdown-number {
-                font-size: 2rem;
-                padding: 0.8rem;
-                min-width: 60px;
-            }
-            
             .features {
                 grid-template-columns: 1fr;
             }
@@ -206,7 +155,7 @@
     </style>
 </head>
 <body>
-    <div class="logo">🎯 Habit Hero</div>
+    <div class="logo">Habit Hero Logo</div>
     
     <h1>Level up your Habits</h1>
     
@@ -216,28 +165,6 @@
 
     <div class="coming-soon">COMING SOON</div>
 
-    <div class="countdown-container">
-        <div class="countdown-title">Launch Countdown</div>
-        <div class="countdown">
-            <div class="countdown-item">
-                <span class="countdown-number" id="days">00</span>
-                <div class="countdown-label">Days</div>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="hours">00</span>
-                <div class="countdown-label">Hours</div>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="minutes">00</span>
-                <div class="countdown-label">Minutes</div>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="seconds">00</span>
-                <div class="countdown-label">Seconds</div>
-            </div>
-        </div>
-    </div>
-
     <div class="cta-section">
         <h2 class="cta-title">Join the Adventure</h2>
         <p class="cta-subtitle">Be the first to know when Habit Hero launches and get exclusive early access!</p>
@@ -246,7 +173,7 @@
         
         <div class="app-store-badge">
             <p>Coming soon to the App Store</p>
-            <a href="#" onclick="handleAppStore()" style="color: white; text-decoration: none;">📱 Download on App Store</a>
+            <a href="#" onclick="handleAppStore()" style="color: white; text-decoration: none;">Download on App Store</a>
         </div>
     </div>
 
@@ -254,19 +181,19 @@
         <div class="feature">
             <div class="feature-icon">🎮</div>
             <h3 class="feature-title">Gamified Progress</h3>
-            <p class="feature-description">Level up your habits with XP, achievements, and power-ups that make building habits feel like an epic quest.</p>
+            <p class="feature-description">Level up your habits with XP, achievements, and power-ups</p>
         </div>
         
         <div class="feature">
             <div class="feature-icon">📊</div>
             <h3 class="feature-title">Pixel Perfect Tracking</h3>
-            <p class="feature-description">Beautiful retro-style charts and progress visualization that makes your journey visually stunning and motivating.</p>
+            <p class="feature-description">Beautiful retro-style charts and progress visualization</p>
         </div>
         
         <div class="feature">
             <div class="feature-icon">🦸</div>
             <h3 class="feature-title">Superhero Journey</h3>
-            <p class="feature-description">Transform into your best self with heroic habit building that turns everyday actions into superpowers.</p>
+            <p class="feature-description">Transform into your best self with heroic habit building</p>
         </div>
     </div>
 
@@ -276,35 +203,6 @@
     </div>
 
     <script>
-        // Countdown timer
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const launchDate = new Date('2024-12-31T00:00:00').getTime(); // Set your launch date
-            const distance = launchDate - now;
-
-            if (distance < 0) {
-                document.getElementById('days').innerHTML = '00';
-                document.getElementById('hours').innerHTML = '00';
-                document.getElementById('minutes').innerHTML = '00';
-                document.getElementById('seconds').innerHTML = '00';
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('days').innerHTML = days.toString().padStart(2, '0');
-            document.getElementById('hours').innerHTML = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').innerHTML = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').innerHTML = seconds.toString().padStart(2, '0');
-        }
-
-        // Update countdown every second
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-
         // Handle early access button
         function handleEarlyAccess() {
             alert('Thank you for your interest! Habit Hero will be launching soon. Stay tuned for updates!');
