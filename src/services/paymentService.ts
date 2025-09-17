@@ -92,7 +92,7 @@ export interface AppleSubscriptionStatus {
 export class PaymentService {
   private static instance: PaymentService;
   private isInitialized = false;
-  private purchaseHistory: InAppPurchases.Purchase[] = [];
+  private purchaseHistory: any[] = [];
 
   static getInstance(): PaymentService {
     if (!PaymentService.instance) {

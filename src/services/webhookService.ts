@@ -245,7 +245,7 @@ export class WebhookService {
       originalTransactionId: transactionInfo.originalTransactionId,
       productId: transactionInfo.productId,
       subscriptionStatus: 'active' as const,
-      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : undefined,
+      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default to 30 days from now
       autoRenewStatus: renewalInfo.autoRenewStatus === 1,
       isTrialPeriod: false, // Determine from transaction data
       isInIntroOfferPeriod: false, // Determine from transaction data
@@ -269,7 +269,7 @@ export class WebhookService {
       originalTransactionId: transactionInfo.originalTransactionId,
       productId: transactionInfo.productId,
       subscriptionStatus: 'active' as const,
-      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : undefined,
+      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default to 30 days from now
       autoRenewStatus: renewalInfo.autoRenewStatus === 1,
       isTrialPeriod: false,
       isInIntroOfferPeriod: false,
@@ -293,7 +293,7 @@ export class WebhookService {
       originalTransactionId: transactionInfo.originalTransactionId,
       productId: transactionInfo.productId,
       subscriptionStatus: 'billing_retry' as const,
-      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : undefined,
+      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default to 30 days from now
       autoRenewStatus: renewalInfo.autoRenewStatus === 1,
       isTrialPeriod: false,
       isInIntroOfferPeriod: false,
@@ -318,7 +318,7 @@ export class WebhookService {
       originalTransactionId: transactionInfo.originalTransactionId,
       productId: transactionInfo.productId,
       subscriptionStatus: 'active' as const,
-      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : undefined,
+      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default to 30 days from now
       autoRenewStatus: renewalInfo.autoRenewStatus === 1,
       isTrialPeriod: false,
       isInIntroOfferPeriod: false,
@@ -342,7 +342,7 @@ export class WebhookService {
       originalTransactionId: transactionInfo.originalTransactionId,
       productId: transactionInfo.productId,
       subscriptionStatus: 'active' as const,
-      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : undefined,
+      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default to 30 days from now
       autoRenewStatus: renewalInfo.autoRenewStatus === 1,
       isTrialPeriod: false,
       isInIntroOfferPeriod: false,
@@ -366,7 +366,7 @@ export class WebhookService {
       originalTransactionId: transactionInfo.originalTransactionId,
       productId: transactionInfo.productId,
       subscriptionStatus: 'expired' as const,
-      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : undefined,
+      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default to 30 days from now
       autoRenewStatus: renewalInfo.autoRenewStatus === 1,
       isTrialPeriod: false,
       isInIntroOfferPeriod: false,
@@ -401,7 +401,7 @@ export class WebhookService {
       originalTransactionId: transactionInfo.originalTransactionId,
       productId: transactionInfo.productId,
       subscriptionStatus: 'active' as const,
-      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : undefined,
+      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default to 30 days from now
       autoRenewStatus: renewalInfo.autoRenewStatus === 1,
       isTrialPeriod: false,
       isInIntroOfferPeriod: false,
@@ -425,7 +425,7 @@ export class WebhookService {
       originalTransactionId: transactionInfo.originalTransactionId,
       productId: transactionInfo.productId,
       subscriptionStatus: 'cancelled' as const,
-      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : undefined,
+      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default to 30 days from now
       autoRenewStatus: false,
       isTrialPeriod: false,
       isInIntroOfferPeriod: false,
@@ -449,7 +449,7 @@ export class WebhookService {
       originalTransactionId: transactionInfo.originalTransactionId,
       productId: transactionInfo.productId,
       subscriptionStatus: 'cancelled' as const,
-      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : undefined,
+      expiresDate: transactionInfo.expiresDate ? new Date(transactionInfo.expiresDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default to 30 days from now
       autoRenewStatus: false,
       isTrialPeriod: false,
       isInIntroOfferPeriod: false,
