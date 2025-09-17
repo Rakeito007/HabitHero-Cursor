@@ -6,10 +6,10 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon.jpg",
     "description": "Build lasting habits with your personal AI coach. Track progress, get insights, and achieve your goals with Habit Hero's minimalist approach to habit formation.",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
