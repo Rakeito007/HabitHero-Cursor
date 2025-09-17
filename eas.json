@@ -19,11 +19,7 @@
     },
     "production": {
       "ios": {
-        "simulator": false,
-        "buildConfiguration": "Release"
-      },
-      "env": {
-        "EXPO_PUBLIC_BACKEND_URL": "https://cd-backend-example-production.up.railway.app"
+        "simulator": false
       }
     }
   },
