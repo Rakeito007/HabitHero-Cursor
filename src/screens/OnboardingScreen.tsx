@@ -66,7 +66,10 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
   ];
 
   const handleSubscribe = async (planId: SubscriptionStatus) => {
+    console.log('handleSubscribe called with planId:', planId);
+    
     if (planId === 'free') {
+      console.log('Processing free plan...');
       completeOnboarding();
       
       // Add sample data for free users
@@ -74,7 +77,14 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         initializeSampleData();
       }, 100);
       
-      navigation.replace('Main');
+      console.log('Navigating to Main screen...');
+      try {
+        navigation.replace('Main');
+      } catch (error) {
+        console.error('Navigation error:', error);
+        // Fallback: try to navigate to Dashboard directly
+        navigation.navigate('Dashboard');
+      }
       return;
     }
 
@@ -240,27 +250,8 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
             />
           ))}
           
-          {/* Continue Button */}
-          <Pressable
-            onPress={() => handleSubscribe(selectedPlan)}
-            disabled={isProcessing}
-            className="mt-4 mb-6 py-4 px-6 rounded-2xl items-center"
-            style={{ 
-              backgroundColor: isProcessing ? theme.textTertiary : theme.primary,
-              opacity: isProcessing ? 0.6 : 1
-            }}
-          >
-            {isProcessing ? (
-              <Text className="text-white font-bold text-lg">Processing...</Text>
-            ) : (
-              <Text className="text-white font-bold text-lg">
-                {selectedPlan === 'free' ? 'Continue with Free' : `Subscribe ${selectedPlan === 'monthly' ? 'Monthly' : 'Lifetime'}`}
-              </Text>
-            )}
-          </Pressable>
-          
           {/* Terms */}
-          <View className="items-center mb-8">
+          <View className="items-center mb-4">
             <Text 
               className="text-xs text-center leading-4"
               style={{ color: theme.textTertiary }}
@@ -270,6 +261,43 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
             </Text>
           </View>
         </ScrollView>
+        
+        {/* Fixed Continue Button */}
+        <View className="px-6 pb-6 pt-4" style={{ backgroundColor: theme.background }}>
+          <Pressable
+            onPress={() => {
+              console.log('Continue button pressed, selectedPlan:', selectedPlan);
+              handleSubscribe(selectedPlan);
+            }}
+            disabled={isProcessing}
+            className="py-4 px-6 rounded-2xl items-center"
+            style={{ 
+              backgroundColor: isProcessing ? theme.textTertiary : theme.primary,
+              opacity: isProcessing ? 0.6 : 1,
+              minHeight: 56, // Ensure minimum touch target
+            }}
+            android_ripple={{ color: 'rgba(255,255,255,0.2)' }}
+          >
+            {isProcessing ? (
+              <View className="flex-row items-center">
+                <ActivityIndicator size="small" color="white" style={{ marginRight: 8 }} />
+                <Text className="text-white font-bold text-lg">Processing...</Text>
+              </View>
+            ) : (
+              <Text className="text-white font-bold text-lg">
+                {selectedPlan === 'free' ? 'Continue with Free' : `Subscribe ${selectedPlan === 'monthly' ? 'Monthly' : 'Lifetime'}`}
+              </Text>
+            )}
+          </Pressable>
+          
+          {/* Debug info */}
+          <Text 
+            className="text-xs text-center mt-2"
+            style={{ color: theme.textTertiary }}
+          >
+            Selected: {selectedPlan} | Processing: {isProcessing ? 'Yes' : 'No'}
+          </Text>
+        </View>
       </SafeAreaView>
     </View>
   );

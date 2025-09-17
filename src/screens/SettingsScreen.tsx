@@ -11,6 +11,20 @@ import { showSuccessNotification, showErrorNotification, showHabitNotification, 
 import { useProFeatures } from '../utils/proFeatures';
 import { paymentService } from '../services/paymentService';
 
+// Debug function to unlock pro features for screenshots
+const unlockProForScreenshots = () => {
+  const { updateSubscription, updateSettings } = useHabitStore.getState();
+  updateSubscription('lifetime');
+  updateSettings({
+    subscriptionStatus: 'lifetime',
+    subscriptionDate: new Date(),
+  });
+  Alert.alert('Pro Unlocked', 'Pro features unlocked for screenshots!');
+};
+
+// Make it available globally for easy access
+(global as any).unlockProForScreenshots = unlockProForScreenshots;
+
 interface SettingsScreenProps {
   navigation: any;
   route: any;
@@ -726,6 +740,50 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation, route }) =>
               </Text>
             </View>
           </View>
+          
+          {/* Debug Section - Remove before production */}
+          {__DEV__ && (
+            <View className="mb-6">
+              <Text 
+                className="text-sm font-medium px-6 py-2 uppercase tracking-wide"
+                style={{ color: theme.textTertiary }}
+              >
+                Debug Tools
+              </Text>
+              
+              <View 
+                className="rounded-xl mx-6 overflow-hidden"
+                style={{ backgroundColor: theme.cardBackground }}
+              >
+                <Pressable
+                  onPress={unlockProForScreenshots}
+                  className="py-4 px-6 flex-row items-center"
+                >
+                  <View 
+                    className="w-10 h-10 rounded-full items-center justify-center mr-4"
+                    style={{ backgroundColor: theme.primary + '20' }}
+                  >
+                    <Ionicons name="diamond" size={20} color={theme.primary} />
+                  </View>
+                  <View className="flex-1">
+                    <Text 
+                      className="text-base font-medium"
+                      style={{ color: theme.text }}
+                    >
+                      Unlock Pro for Screenshots
+                    </Text>
+                    <Text 
+                      className="text-sm"
+                      style={{ color: theme.textSecondary }}
+                    >
+                      Temporarily enable all pro features
+                    </Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color={theme.textTertiary} />
+                </Pressable>
+              </View>
+            </View>
+          )}
         </ScrollView>
       </SafeAreaView>
       

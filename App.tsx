@@ -35,7 +35,7 @@ const openai_api_key = Constants.expoConfig.extra.apikey;
 
 export default function App() {
   const { settings, updateSecurityStatus } = useHabitStore();
-  const theme = getTheme(settings.theme);
+  const theme = getTheme(settings?.theme || 'light');
   const [securityInitialized, setSecurityInitialized] = useState(false);
   const [minSplashElapsed, setMinSplashElapsed] = useState(false);
   
@@ -43,9 +43,12 @@ export default function App() {
     // Initialize simple security manager
     const initializeSecurity = async () => {
       try {
+        console.log('Initializing security manager...');
         await simpleSecurityManager.initialize();
+        console.log('Security manager initialized successfully');
         setSecurityInitialized(true);
       } catch (error) {
+        console.warn('Security initialization failed, continuing anyway:', error);
         setSecurityInitialized(true); // Continue anyway
       }
     };
@@ -67,14 +70,17 @@ export default function App() {
   // Watchdog: do not block UI if init stalls
   useEffect(() => {
     if (!securityInitialized) {
-      const t = setTimeout(() => setSecurityInitialized(true), 5000);
+      const t = setTimeout(() => {
+        console.log('Security initialization timeout, proceeding anyway');
+        setSecurityInitialized(true);
+      }, 3000); // Reduced timeout for faster startup
       return () => clearTimeout(t);
     }
   }, [securityInitialized]);
 
-  // Ensure splash is visible for at least 3 seconds
+  // Ensure splash is visible for at least 1.5 seconds
   useEffect(() => {
-    const t = setTimeout(() => setMinSplashElapsed(true), 3000);
+    const t = setTimeout(() => setMinSplashElapsed(true), 1500);
     return () => clearTimeout(t);
   }, []);
   

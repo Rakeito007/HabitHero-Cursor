@@ -20,6 +20,12 @@
     "production": {
       "ios": {
         "simulator": false
+      },
+      "env": {
+        "EXPO_PUBLIC_BACKEND_URL": "https://cd-backend-example-production.up.railway.app",
+        "EXPO_PUBLIC_API_KEY": "placeholder",
+        "EXPO_PUBLIC_APPLE_BUNDLE_ID": "com.vibecode.habithero",
+        "EXPO_PUBLIC_APPLE_SHARED_SECRET": "placeholder"
       }
     }
   },

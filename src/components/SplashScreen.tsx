@@ -12,15 +12,17 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ theme }) => {
   const defaultLogoDataUri = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAIUlEQVR4nO3BMQEAAADCoPdPbQ43oAAAAAAAAAAAAAAAAPgGi58AATkKYY0AAAAASUVORK5CYII=";
   const { settings } = useHabitStore();
 
+  // Use local assets only - no external URLs for TestFlight compatibility
   const logoLight = require("../../assets/app-logo-light.png");
   const logoDark = require("../../assets/app-logo-dark.png");
   const logoDefault = require("../../assets/app-logo.png");
-  const logoUrl = "https://images.composerapi.com/9502E08E-BC5B-4061-9B37-A17FE8DC753F.jpg";
-  const [displaySource, setDisplaySource] = useState<any>({ uri: logoUrl });
+  const [displaySource, setDisplaySource] = useState<any>(logoDefault);
   const [usedDefaultOnce, setUsedDefaultOnce] = useState(false);
 
   React.useEffect(() => {
-    setDisplaySource({ uri: logoUrl });
+    // Use local assets based on theme
+    const logoSource = settings.theme === 'dark' ? logoDark : logoLight;
+    setDisplaySource(logoSource);
     setUsedDefaultOnce(false);
   }, [settings.theme]);
 
@@ -40,12 +42,16 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ theme }) => {
             style={{ width: 160, height: 160, borderRadius: 24 }}
             resizeMode="contain"
             onError={() => {
+              console.log('Image load error, falling back to default');
               if (!usedDefaultOnce) {
                 setDisplaySource(logoDefault);
                 setUsedDefaultOnce(true);
               } else {
                 setDisplaySource({ uri: defaultLogoDataUri } as any);
               }
+            }}
+            onLoad={() => {
+              console.log('Image loaded successfully');
             }}
           />
         </View>
