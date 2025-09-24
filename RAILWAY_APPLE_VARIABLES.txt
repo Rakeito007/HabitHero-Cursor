@@ -1,0 +1,24 @@
+# Additional Railway Environment Variables for Apple Store Integration
+
+# Add these to your Railway backend after getting Apple Store Connect API key:
+
+APPLE_ISSUER_ID=your-issuer-id-from-app-store-connect
+APPLE_KEY_ID=your-key-id-from-app-store-connect
+APPLE_PRIVATE_KEY=your-private-key-content-from-p8-file
+
+# Instructions:
+# 1. Go to App Store Connect → Users and Access → Keys
+# 2. Create new App Store Connect API key
+# 3. Download the .p8 file
+# 4. Copy the Key ID and Issuer ID
+# 5. Copy the private key content from the .p8 file
+# 6. Add these variables to Railway Dashboard → Variables
+# 7. Redeploy your backend
+
+# Your existing variables (already set):
+API_KEY=129c97b630a6e7a036659b3b85cf004c077c3d40dbdcfd8ba6eaa95dd1f092cc
+BUNDLE_ID=com.vibecode.habithero
+NODE_ENV=production
+PORT=3000
+
+

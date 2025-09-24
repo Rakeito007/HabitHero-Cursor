@@ -4,8 +4,8 @@ import { habitColors } from './theme';
 export const initializeSampleData = () => {
   const { addHabit, toggleHabitEntry, habits, settings } = useHabitStore.getState();
   
-  // Only add sample data if no habits exist and user has completed onboarding
-  if (habits.length > 0 || !settings.hasCompletedOnboarding) return;
+  // Disabled: No sample data - users create their own habits
+  return;
   
   // Optimize: Pre-define sample habits as constants to avoid recreation
   const baseSampleHabits = [

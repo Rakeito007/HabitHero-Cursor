@@ -856,10 +856,27 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation, route }) =>
               
               {/* Monthly Plan */}
               <Pressable
-                onPress={() => {
-                  setShowSubscriptionPlans(false);
-                  updateSettings({ subscriptionStatus: 'monthly' });
-                  showSuccessNotification('Subscription Active!', 'Welcome to PRO! All features unlocked.');
+                onPress={async () => {
+                  try {
+                    // Initialize payment service
+                    const isInitialized = await paymentService.initialize();
+                    if (!isInitialized) {
+                      throw new Error('Payment service initialization failed');
+                    }
+
+                    // Attempt to purchase monthly subscription
+                    const result = await paymentService.purchaseProduct('com.vibecode.habithero.monthly');
+                    
+                    if (result.responseCode === 0) {
+                      setShowSubscriptionPlans(false);
+                      showSuccessNotification('Subscription Active!', 'Welcome to PRO! All features unlocked.');
+                    } else {
+                      showErrorNotification('Purchase Failed', 'Unable to complete subscription. Please try again.');
+                    }
+                  } catch (error) {
+                    console.error('Subscription error:', error);
+                    showErrorNotification('Subscription Failed', 'There was an issue processing your subscription. Please try again.');
+                  }
                 }}
                 className="p-4 rounded-xl mb-3 border-2"
                 style={{ 
@@ -971,10 +988,27 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation, route }) =>
               
               {/* Lifetime Plan */}
               <Pressable
-                onPress={() => {
-                  setShowSubscriptionPlans(false);
-                  updateSettings({ subscriptionStatus: 'lifetime' });
-                  showSuccessNotification('Lifetime PRO Activated!', 'You now own PRO forever! 🎉');
+                onPress={async () => {
+                  try {
+                    // Initialize payment service
+                    const isInitialized = await paymentService.initialize();
+                    if (!isInitialized) {
+                      throw new Error('Payment service initialization failed');
+                    }
+
+                    // Attempt to purchase lifetime subscription
+                    const result = await paymentService.purchaseProduct('com.vibecode.habithero.lifetime');
+                    
+                    if (result.responseCode === 0) {
+                      setShowSubscriptionPlans(false);
+                      showSuccessNotification('Lifetime PRO Activated!', 'You now own PRO forever! 🎉');
+                    } else {
+                      showErrorNotification('Purchase Failed', 'Unable to complete subscription. Please try again.');
+                    }
+                  } catch (error) {
+                    console.error('Subscription error:', error);
+                    showErrorNotification('Subscription Failed', 'There was an issue processing your subscription. Please try again.');
+                  }
                 }}
                 className="p-4 rounded-xl mb-4"
                 style={{ 

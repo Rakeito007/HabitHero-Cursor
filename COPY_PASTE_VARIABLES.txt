@@ -1,0 +1,11 @@
+API_KEY
+129c97b630a6e7a036659b3b85cf004c077c3d40dbdcfd8ba6eaa95dd1f092cc
+
+BUNDLE_ID
+com.vibecode.habithero
+
+NODE_ENV
+production
+
+PORT
+3000

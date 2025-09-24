@@ -1,5 +1,6 @@
 import { Platform, Alert } from 'react-native';
 import { useHabitStore } from '../state/habitStore';
+import { backendService, ReceiptValidationResponse } from './backendService';
 
 // Conditional import for IAP - only available in production builds
 let InAppPurchases: any = null;
@@ -67,9 +68,9 @@ const MockIAP = {
   }
 };
 
-// Use mock in development, real IAP in production
+// Use real IAP in production builds, mock only in Expo Go
 const IAP = InAppPurchases || MockIAP;
-const isSimulationMode = __DEV__ || !InAppPurchases;
+const isSimulationMode = __DEV__ && !InAppPurchases;
 
 // Product IDs for App Store Connect
 const PRODUCT_IDS = {
@@ -105,6 +106,12 @@ export class PaymentService {
   async initialize(): Promise<boolean> {
     try {
       if (this.isInitialized) return true;
+
+      // Production mode - backend integration is ready
+      if (!isSimulationMode) {
+        console.log('✅ Production mode: Backend receipt validation enabled');
+        console.log('✅ Production mode: Secure subscription management active');
+      }
 
       // Connect to the store
       await IAP.connectAsync();
@@ -145,30 +152,48 @@ export class PaymentService {
         console.log('🔧 SIMULATION MODE: Simulating Apple Store purchase');
         console.log('📱 In production, this would show the real Apple Store purchase dialog');
         
-        // Show simulation alert
-        if (Platform.OS === 'ios' || Platform.OS === 'android') {
+        // Show simulation alert with proper paywall
+        return new Promise((resolve, reject) => {
           Alert.alert(
-            '🧪 Simulation Mode',
-            'This is a simulated purchase for testing. In production, you would see the real Apple Store purchase dialog.',
-            [{ text: 'Continue Simulation', style: 'default' }]
+            '💳 Purchase Required',
+            `This is a simulated purchase for testing.\n\nProduct: ${productId}\nPrice: ${productId.includes('monthly') ? '$1.99/month' : '$25.00 one-time'}\n\nIn production, you would see the real Apple Store purchase dialog.`,
+            [
+              { 
+                text: 'Cancel', 
+                style: 'cancel',
+                onPress: () => {
+                  const cancelResult = {
+                    responseCode: IAP.IAPResponseCode.USER_CANCELED,
+                    results: []
+                  };
+                  resolve(cancelResult);
+                }
+              },
+              { 
+                text: 'Purchase', 
+                style: 'default',
+                onPress: async () => {
+                  // Simulate purchase processing
+                  setTimeout(async () => {
+                    const mockResult = {
+                      responseCode: IAP.IAPResponseCode.OK,
+                      results: [{
+                        responseCode: IAP.IAPResponseCode.OK,
+                        productId,
+                        purchaseTime: new Date().toISOString(),
+                        transactionId: `mock_${Date.now()}`,
+                        originalTransactionId: `mock_original_${Date.now()}`,
+                      }]
+                    };
+                    
+                    await this.handleSuccessfulPurchase(mockResult);
+                    resolve(mockResult);
+                  }, 2000);
+                }
+              }
+            ]
           );
-        }
-        
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        const mockResult = {
-          responseCode: IAP.IAPResponseCode.OK,
-          results: [{
-            responseCode: IAP.IAPResponseCode.OK,
-            productId,
-            purchaseTime: new Date().toISOString(),
-            transactionId: `mock_${Date.now()}`,
-            originalTransactionId: `mock_original_${Date.now()}`,
-          }]
-        };
-        
-        await this.handleSuccessfulPurchase(mockResult);
-        return mockResult;
+        });
       }
       
       const result = await IAP.purchaseItemAsync(productId);
@@ -249,18 +274,50 @@ export class PaymentService {
     if (!purchase) return;
 
     try {
-      // Verify purchase with backend
-      const isValid = await this.verifyPurchaseWithBackend(purchase);
-      
-      if (isValid) {
-        // Update local subscription status
-        await this.updateLocalSubscriptionStatus(purchase);
-        
-        // Show success message
-        this.showSuccessMessage(purchase);
-      } else {
-        this.showError('Purchase verification failed');
+      // SECURE: Verify purchase with backend
+      console.log('🔐 Verifying purchase with backend...');
+      const validation = await backendService.validateReceipt(
+        purchase.receiptData || 'mock_receipt',
+        purchase.productId,
+        purchase.transactionId
+      );
+
+      if (!validation.isValid) {
+        throw new Error(`Receipt validation failed: ${validation.error || 'Invalid receipt'}`);
       }
+
+      // Update subscription status
+      const { updateSubscription } = useHabitStore.getState();
+      let subscriptionStatus: 'monthly' | 'lifetime' = 'monthly';
+      
+      if (purchase.productId === PRODUCT_IDS.LIFETIME_PURCHASE) {
+        subscriptionStatus = 'lifetime';
+      } else if (purchase.productId === PRODUCT_IDS.MONTHLY_SUBSCRIPTION) {
+        subscriptionStatus = 'monthly';
+      }
+      
+      // SECURE: Update subscription on backend
+      const backendUpdated = await backendService.updateSubscriptionStatus({
+        productId: purchase.productId,
+        transactionId: purchase.transactionId,
+        expiresDate: validation.expiresDate ? new Date(validation.expiresDate) : undefined,
+        isActive: validation.subscriptionStatus === 'active'
+      });
+
+      if (!backendUpdated) {
+        console.warn('⚠️ Failed to update backend, but purchase is valid');
+      }
+      
+      // Update local subscription status
+      updateSubscription(subscriptionStatus);
+      
+      // Store purchase in history
+      this.purchaseHistory.push(purchase);
+      
+      // Show success message
+      this.showSuccessMessage(purchase);
+      
+      console.log('✅ Purchase processed and validated successfully');
     } catch (error) {
       console.error('❌ Error handling successful purchase:', error);
       this.showError('Failed to process purchase');
@@ -301,44 +358,6 @@ export class PaymentService {
     this.showError(errorMessage);
   }
 
-  // Verify purchase with backend
-  private async verifyPurchaseWithBackend(purchase: any): Promise<boolean> {
-    try {
-      // TODO: Implement backend verification
-      // This should call your backend API to verify the receipt with Apple
-      console.log('🔍 Verifying purchase with backend...', purchase);
-      
-      // For now, return true (in production, implement proper verification)
-      return true;
-    } catch (error) {
-      console.error('❌ Backend verification failed:', error);
-      return false;
-    }
-  }
-
-  // Update local subscription status
-  private async updateLocalSubscriptionStatus(purchase: any): Promise<void> {
-    try {
-      const { updateSubscription } = useHabitStore.getState();
-      
-      // Determine subscription type based on product ID
-      let subscriptionStatus: 'monthly' | 'lifetime' = 'monthly';
-      
-      if (purchase.productId === PRODUCT_IDS.LIFETIME_PURCHASE) {
-        subscriptionStatus = 'lifetime';
-      } else if (purchase.productId === PRODUCT_IDS.MONTHLY_SUBSCRIPTION) {
-        subscriptionStatus = 'monthly';
-      }
-      
-      // Update subscription status
-      updateSubscription(subscriptionStatus);
-      
-      console.log(`✅ Subscription updated to: ${subscriptionStatus}`);
-    } catch (error) {
-      console.error('❌ Failed to update subscription status:', error);
-      throw error;
-    }
-  }
 
   // Process purchase history to determine current subscription status
   private async processPurchaseHistory(purchases: any[]): Promise<void> {

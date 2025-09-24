@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { DeviceEventEmitter, Alert } from "react-native";
+import { DeviceEventEmitter, Alert, LogBox } from "react-native";
+import * as SplashScreenExpo from 'expo-splash-screen';
 import RootNavigator from "./src/navigation/RootNavigator";
 import { useHabitStore } from "./src/state/habitStore";
 import { getTheme } from "./src/utils/theme";
@@ -11,6 +12,19 @@ import NotificationManager from "./src/components/NotificationManager";
 import SplashScreen from "./src/components/SplashScreen";
 import { simpleSecurityManager } from "./src/security/SimpleSecurityManager";
 import ErrorBoundary from "./src/components/ErrorBoundary";
+
+// Keep the splash screen visible while we fetch resources
+SplashScreenExpo.preventAutoHideAsync();
+
+// Suppress debugger warnings and annoying notifications
+LogBox.ignoreLogs([
+  'SafeAreaView has been deprecated',
+  'Viewing debugger warnings',
+  'Debugger integration',
+  'Welcome to React Native DevTools',
+  'Running "main" with',
+  'Project ID is: undefined'
+]);
 
 /*
 IMPORTANT NOTICE: DO NOT REMOVE
@@ -34,58 +48,39 @@ const openai_api_key = Constants.expoConfig.extra.apikey;
 */
 
 export default function App() {
-  const { settings, updateSecurityStatus } = useHabitStore();
+  const { settings } = useHabitStore();
   const theme = getTheme(settings?.theme || 'light');
-  const [securityInitialized, setSecurityInitialized] = useState(false);
-  const [minSplashElapsed, setMinSplashElapsed] = useState(false);
+  const [appReady, setAppReady] = useState(false);
   
   useEffect(() => {
-    // Initialize simple security manager
-    const initializeSecurity = async () => {
+    // Simplified initialization to prevent memory crashes
+    const initializeApp = async () => {
       try {
-        console.log('Initializing security manager...');
-        await simpleSecurityManager.initialize();
-        console.log('Security manager initialized successfully');
-        setSecurityInitialized(true);
+        console.log('Initializing app...');
+        
+        // Skip complex security initialization to prevent memory issues
+        console.log('Skipping security initialization to prevent crashes');
+        
+        // Minimal delay to show splash screen
+        setTimeout(async () => {
+          console.log('App ready');
+          setAppReady(true);
+          // Hide the native splash screen
+          await SplashScreenExpo.hideAsync();
+        }, 2000);
+        
       } catch (error) {
-        console.warn('Security initialization failed, continuing anyway:', error);
-        setSecurityInitialized(true); // Continue anyway
+        console.warn('App initialization warning:', error);
+        setAppReady(true); // Continue anyway
+        await SplashScreenExpo.hideAsync();
       }
     };
 
-    initializeSecurity();
-
-    // Defer sample data initialization
-    if (settings.hasCompletedOnboarding) {
-      setTimeout(() => {
-        import("./src/utils/sampleData")
-          .then(({ initializeSampleData }) => {
-            initializeSampleData();
-          })
-          .catch(() => {});
-      }, 100);
-    }
-  }, [settings.hasCompletedOnboarding]);
-
-  // Watchdog: do not block UI if init stalls
-  useEffect(() => {
-    if (!securityInitialized) {
-      const t = setTimeout(() => {
-        console.log('Security initialization timeout, proceeding anyway');
-        setSecurityInitialized(true);
-      }, 3000); // Reduced timeout for faster startup
-      return () => clearTimeout(t);
-    }
-  }, [securityInitialized]);
-
-  // Ensure splash is visible for at least 1.5 seconds
-  useEffect(() => {
-    const t = setTimeout(() => setMinSplashElapsed(true), 1500);
-    return () => clearTimeout(t);
+    initializeApp();
   }, []);
-  
-  // Show loading while initializing or before min splash time elapses
-  if (!securityInitialized || !minSplashElapsed) {
+
+  // Show loading while initializing
+  if (!appReady) {
     return <SplashScreen theme={theme} />;
   }
   

@@ -3,70 +3,82 @@ import { View, Text, ActivityIndicator, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useHabitStore } from '../state/habitStore';
 
+// Import the app icon - try multiple sources (matching app.json)
+const iconJpg = require('../../assets/icon.jpg');
+const appIcon = require('../../assets/icon.png');
+const appLogo = require('../../assets/app-logo.png');
+
 interface SplashScreenProps {
   theme: any;
 }
 
 const SplashScreen: React.FC<SplashScreenProps> = ({ theme }) => {
-  // Built-in placeholder logo to avoid asset issues until real PNGs are uploaded
-  const defaultLogoDataUri = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAIUlEQVR4nO3BMQEAAADCoPdPbQ43oAAAAAAAAAAAAAAAAPgGi58AATkKYY0AAAAASUVORK5CYII=";
   const { settings } = useHabitStore();
+  const [imageError, setImageError] = useState(false);
+  const [currentImageSource, setCurrentImageSource] = useState(iconJpg);
 
-  // Use local assets only - no external URLs for TestFlight compatibility
-  const logoLight = require("../../assets/app-logo-light.png");
-  const logoDark = require("../../assets/app-logo-dark.png");
-  const logoDefault = require("../../assets/app-logo.png");
-  const [displaySource, setDisplaySource] = useState<any>(logoDefault);
-  const [usedDefaultOnce, setUsedDefaultOnce] = useState(false);
-
-  React.useEffect(() => {
-    // Use local assets based on theme
-    const logoSource = settings.theme === 'dark' ? logoDark : logoLight;
-    setDisplaySource(logoSource);
-    setUsedDefaultOnce(false);
-  }, [settings.theme]);
+  // Debug: Log all available icons
+  console.log('Available icons:', {
+    iconJpg: iconJpg,
+    iconPng: appIcon,
+    appLogo: appLogo
+  });
 
   return (
     <SafeAreaView 
       className="flex-1 items-center justify-center"
-      style={{ backgroundColor: theme.background }}
+      style={{ backgroundColor: '#000000' }}
     >
       <View className="items-center">
         {/* App Logo */}
-          <View 
+        <View 
           className="w-40 h-40 rounded-3xl items-center justify-center mb-6"
-          style={{ backgroundColor: theme.surface }}
+          style={{ backgroundColor: '#1a1a1a' }}
         >
           <Image
-            source={displaySource}
-            style={{ width: 160, height: 160, borderRadius: 24 }}
+            source={currentImageSource}
+            style={{ width: 120, height: 120, borderRadius: 20 }}
             resizeMode="contain"
-            onError={() => {
-              console.log('Image load error, falling back to default');
-              if (!usedDefaultOnce) {
-                setDisplaySource(logoDefault);
-                setUsedDefaultOnce(true);
+            onError={(error) => {
+              console.log('❌ Image failed to load:', error);
+              console.log('Trying next image source...');
+              
+              // Try different image sources
+              if (currentImageSource === iconJpg) {
+                console.log('Trying icon.png...');
+                setCurrentImageSource(appIcon);
+              } else if (currentImageSource === appIcon) {
+                console.log('Trying app-logo.png...');
+                setCurrentImageSource(appLogo);
               } else {
-                setDisplaySource({ uri: defaultLogoDataUri } as any);
+                console.log('All image sources failed, showing fallback');
+                setImageError(true);
               }
             }}
             onLoad={() => {
-              console.log('Image loaded successfully');
+              console.log('✅ Image loaded successfully:', currentImageSource);
+              setImageError(false);
             }}
           />
+          {imageError && (
+            <View style={{ alignItems: 'center' }}>
+              <Text style={{ color: '#ffffff', fontSize: 48, fontWeight: 'bold' }}>H</Text>
+              <Text style={{ color: '#cccccc', fontSize: 12, marginTop: 4 }}>Habit Hero</Text>
+            </View>
+          )}
         </View>
         
         {/* App Name */}
         <Text 
           className="text-3xl font-bold mb-2"
-          style={{ color: theme.text }}
+          style={{ color: '#ffffff' }}
         >
           Habit Hero
         </Text>
         
         <Text 
           className="text-lg mb-8"
-          style={{ color: theme.textSecondary }}
+          style={{ color: '#cccccc' }}
         >
           Building Better Habits
         </Text>
@@ -74,7 +86,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ theme }) => {
         {/* Loading Indicator */}
         <ActivityIndicator 
           size="large" 
-          color={theme.primary}
+          color="#ffffff"
         />
       </View>
     </SafeAreaView>

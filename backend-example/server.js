@@ -15,6 +15,18 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Authentication middleware
+const authenticateRequest = (req, res, next) => {
+  const apiKey = req.headers.authorization?.replace('Bearer ', '');
+  const expectedApiKey = process.env.API_KEY;
+  
+  if (!apiKey || apiKey !== expectedApiKey) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  
+  next();
+};
+
 // Configuration
 const APPLE_STORE_SERVER_API_URL = 'https://api.storekit.itunes.apple.com/inApps/v1';
 const APPLE_PUBLIC_KEYS_URL = 'https://api.storekit.itunes.apple.com/inApps/v1/notifications/history';
@@ -62,13 +74,17 @@ async function verifyAppleSignature(signedPayload, environment) {
   }
 }
 
-// Verify receipt with Apple
-app.post('/api/subscriptions/verify-receipt', async (req, res) => {
+// Verify receipt with Apple - matches frontend endpoint
+app.post('/validate-receipt', authenticateRequest, async (req, res) => {
   try {
-    const { receiptData, bundleId } = req.body;
+    const { receiptData, productId, transactionId, userId } = req.body;
     
-    if (!receiptData || bundleId !== BUNDLE_ID) {
-      return res.status(400).json({ success: false, error: 'Invalid request' });
+    if (!receiptData || !productId || !transactionId) {
+      return res.status(400).json({ 
+        isValid: false, 
+        subscriptionStatus: 'invalid',
+        error: 'Missing required fields' 
+      });
     }
 
     // Generate JWT for Apple Store Server API
@@ -106,37 +122,75 @@ app.post('/api/subscriptions/verify-receipt', async (req, res) => {
       // Store subscription in database
       subscriptions.set(latestReceiptInfo.original_transaction_id, subscription);
 
-      res.json({ success: true, subscription });
+      // Return response matching frontend expectations
+      res.json({ 
+        isValid: true, 
+        subscriptionStatus: 'active',
+        expiresDate: subscription.expiresDate.toISOString(),
+        originalTransactionId: subscription.originalTransactionId
+      });
     } else {
-      res.json({ success: false, error: 'Invalid receipt' });
+      res.json({ 
+        isValid: false, 
+        subscriptionStatus: 'invalid',
+        error: 'Invalid receipt' 
+      });
     }
   } catch (error) {
     console.error('Receipt verification error:', error);
-    res.status(500).json({ success: false, error: 'Internal server error' });
+    res.status(500).json({ 
+      isValid: false, 
+      subscriptionStatus: 'invalid',
+      error: 'Internal server error' 
+    });
   }
 });
 
-// Get subscription status
-app.get('/api/subscriptions/status/:userId', async (req, res) => {
+// Get subscription status - matches frontend endpoint
+app.get('/subscription-status', authenticateRequest, async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.headers['x-user-id'];
     const subscription = subscriptions.get(userId);
     
     if (subscription) {
-      res.json({ success: true, subscription });
+      res.json({
+        isActive: subscription.subscriptionStatus === 'active',
+        productId: subscription.productId,
+        expiresDate: subscription.expiresDate,
+        autoRenew: subscription.autoRenewStatus,
+        isTrial: subscription.isTrialPeriod
+      });
     } else {
-      res.json({ success: false, error: 'No subscription found' });
+      res.json({ 
+        isActive: false, 
+        productId: null,
+        expiresDate: null,
+        autoRenew: false,
+        isTrial: false
+      });
     }
   } catch (error) {
     console.error('Get subscription status error:', error);
-    res.status(500).json({ success: false, error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-// Update subscription status
-app.post('/api/subscriptions/update', async (req, res) => {
+// Update subscription status - matches frontend endpoint
+app.post('/update-subscription', authenticateRequest, async (req, res) => {
   try {
-    const { userId, subscription } = req.body;
+    const userId = req.headers['x-user-id'];
+    const { productId, transactionId, expiresDate, isActive } = req.body;
+    
+    const subscription = {
+      productId,
+      transactionId,
+      expiresDate: expiresDate ? new Date(expiresDate) : undefined,
+      subscriptionStatus: isActive ? 'active' : 'inactive',
+      autoRenewStatus: true,
+      isTrialPeriod: false,
+      isInIntroOfferPeriod: false,
+      environment: 'production'
+    };
     
     subscriptions.set(userId, subscription);
     
@@ -148,7 +202,7 @@ app.post('/api/subscriptions/update', async (req, res) => {
 });
 
 // Apple webhook endpoint for Server-to-Server Notifications
-app.post('/api/webhooks/apple', async (req, res) => {
+app.post('/webhooks/apple', async (req, res) => {
   try {
     const notification = req.body;
     

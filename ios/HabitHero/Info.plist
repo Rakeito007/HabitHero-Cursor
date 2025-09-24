@@ -17,15 +17,15 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.1</string>
+	<string>1.0.3</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>14</string>
+	<string>20</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>15.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>LSMinimumSystemVersion</key>
-	<string>12.0</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -33,6 +33,14 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Habit Hero uses the camera to let you take progress photos and visual reminders for your habits.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Habit Hero may access your contacts to help you share your progress with friends and family.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Habit Hero uses the microphone to record voice notes and audio reminders to help you track your habit progress.</string>
+	<key>RCTNewArchEnabled</key>
+	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -49,11 +57,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSCameraUsageDescription</key>
-	<string>Habit Hero uses the camera to let you take progress photos and visual reminders for your habits.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Habit Hero uses the microphone to record voice notes and audio reminders to help you track your habit progress.</string>
-	<key>NSContactsUsageDescription</key>
-	<string>Habit Hero may access your contacts to help you share your progress with friends and family.</string>
 </dict>
 </plist>

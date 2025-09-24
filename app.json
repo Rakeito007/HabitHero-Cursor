@@ -3,15 +3,14 @@
     "name": "Habit Hero",
     "slug": "habit-hero",
     "scheme": "habit-hero",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "orientation": "portrait",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "icon": "./assets/icon.jpg",
     "description": "Build lasting habits with your personal AI coach. Track progress, get insights, and achieve your goals with Habit Hero's minimalist approach to habit formation.",
     "splash": {
-      "image": "./assets/splash.jpg",
       "resizeMode": "contain",
-      "backgroundColor": "#FFFFFF"
+      "backgroundColor": "#000000"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -19,7 +18,15 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.vibecode.habithero",
-      "buildNumber": "14",
+      "buildNumber": "20",
+      "splash": {
+        "resizeMode": "contain",
+        "backgroundColor": "#000000"
+      },
+      "backgroundColor": "#000000",
+      "userInterfaceStyle": "dark",
+      "statusBarStyle": "light-content",
+      "deploymentTarget": "15.0",
       "infoPlist": {
         "NSCameraUsageDescription": "Habit Hero uses the camera to let you take progress photos and visual reminders for your habits.",
         "NSMicrophoneUsageDescription": "Habit Hero uses the microphone to record voice notes and audio reminders to help you track your habit progress."
@@ -43,6 +50,10 @@
         "android.permission.WRITE_EXTERNAL_STORAGE"
       ]
     },
+    "web": {
+      "favicon": "./assets/icon.png",
+      "bundler": "metro"
+    },
     "plugins": [
       "expo-build-properties",
       "expo-secure-store",
@@ -51,7 +62,13 @@
       "expo-mail-composer",
       "expo-sqlite",
       "expo-video",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#000000"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": false

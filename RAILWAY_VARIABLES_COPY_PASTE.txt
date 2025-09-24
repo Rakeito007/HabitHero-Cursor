@@ -1,0 +1,32 @@
+# Railway Environment Variables - Copy & Paste Ready
+
+## Copy these one by one into Railway Dashboard:
+
+### Variable 1:
+Name: API_KEY
+Value: 129c97b630a6e7a036659b3b85cf004c077c3d40dbdcfd8ba6eaa95dd1f092cc
+
+### Variable 2:
+Name: BUNDLE_ID
+Value: com.vibecode.habithero
+
+### Variable 3:
+Name: NODE_ENV
+Value: production
+
+### Variable 4:
+Name: PORT
+Value: 3000
+
+## Quick Copy-Paste Format:
+
+API_KEY=129c97b630a6e7a036659b3b85cf004c077c3d40dbdcfd8ba6eaa95dd1f092cc
+BUNDLE_ID=com.vibecode.habithero
+NODE_ENV=production
+PORT=3000
+
+## Instructions:
+1. Go to Railway Dashboard → Your Project → Variables Tab
+2. Click "New Variable" for each one
+3. Copy the Name and Value from above
+4. Paste and save each variable

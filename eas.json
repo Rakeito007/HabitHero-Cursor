@@ -23,9 +23,9 @@
       },
       "env": {
         "EXPO_PUBLIC_BACKEND_URL": "https://cd-backend-example-production.up.railway.app",
-        "EXPO_PUBLIC_API_KEY": "placeholder",
+        "EXPO_PUBLIC_API_KEY": "129c97b630a6e7a036659b3b85cf004c077c3d40dbdcfd8ba6eaa95dd1f092cc",
         "EXPO_PUBLIC_APPLE_BUNDLE_ID": "com.vibecode.habithero",
-        "EXPO_PUBLIC_APPLE_SHARED_SECRET": "placeholder"
+        "EXPO_PUBLIC_APPLE_SHARED_SECRET": "your-apple-shared-secret-here"
       }
     }
   },

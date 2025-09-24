@@ -7,4 +7,7 @@ const config = getDefaultConfig(__dirname);
 
 config.resolver.useWatchman = false;
 
+// Enable require.context for compatibility
+config.transformer.unstable_allowRequireContext = true;
+
 module.exports = withNativeWind(config, { input: './global.css' });
