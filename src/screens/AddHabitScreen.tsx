@@ -118,10 +118,9 @@ const AddHabitScreen: React.FC<AddHabitScreenProps> = ({ navigation }) => {
   };
   
   return (
-    <Pressable 
+    <View 
       className="flex-1" 
       style={{ backgroundColor: theme.background }}
-      onPress={dismissKeyboard}
     >
       <SafeAreaView className="flex-1">
         {/* Header */}
@@ -155,7 +154,14 @@ const AddHabitScreen: React.FC<AddHabitScreenProps> = ({ navigation }) => {
           </Pressable>
         </View>
         
-        <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
+        <ScrollView 
+          className="flex-1 px-6" 
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          scrollEventThrottle={16}
+          bounces={true}
+          alwaysBounceVertical={false}
+        >
           {/* Preview */}
           <View 
             className="rounded-xl p-4 mb-6"
@@ -335,15 +341,18 @@ const AddHabitScreen: React.FC<AddHabitScreenProps> = ({ navigation }) => {
                         "w-12 h-12 rounded-xl items-center justify-center m-1",
                         selectedIcon === icon ? "" : ""
                       )}
-                      style={{
+                      style={({ pressed }) => ({
                         backgroundColor: selectedIcon === icon 
                           ? selectedColor + '20' 
                           : theme.surface,
                         borderColor: selectedIcon === icon 
                           ? selectedColor 
                           : theme.border,
-                        borderWidth: 1
-                      }}
+                        borderWidth: 1,
+                        opacity: pressed ? 0.7 : 1,
+                        transform: [{ scale: pressed ? 0.95 : 1 }]
+                      })}
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                     >
                       <Ionicons 
                         name={icon as any} 
@@ -360,7 +369,7 @@ const AddHabitScreen: React.FC<AddHabitScreenProps> = ({ navigation }) => {
           <View className="h-8" />
         </ScrollView>
       </SafeAreaView>
-    </Pressable>
+    </View>
   );
 };
 
