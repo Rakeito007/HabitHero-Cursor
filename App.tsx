@@ -12,6 +12,7 @@ import NotificationManager from "./src/components/NotificationManager";
 import SplashScreen from "./src/components/SplashScreen";
 import { simpleSecurityManager } from "./src/security/SimpleSecurityManager";
 import ErrorBoundary from "./src/components/ErrorBoundary";
+import { widgetService } from "./src/services/WidgetService";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreenExpo.preventAutoHideAsync();
@@ -60,6 +61,11 @@ export default function App() {
         
         // Skip complex security initialization to prevent memory issues
         console.log('Skipping security initialization to prevent crashes');
+        
+        // Initialize widget service
+        widgetService.setupListeners();
+        await widgetService.updateWidgetData();
+        console.log('Widget service initialized');
         
         // Minimal delay to show splash screen
         setTimeout(async () => {

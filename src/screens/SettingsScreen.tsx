@@ -504,6 +504,42 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation, route }) =>
             </View>
           </View>
           
+          {/* Widgets */}
+          <View className="mb-6">
+            <Text 
+              className="text-sm font-medium px-6 py-2 uppercase tracking-wide"
+              style={{ color: theme.textTertiary }}
+            >
+              Widgets
+            </Text>
+            
+            <View 
+              className="rounded-xl mx-6 overflow-hidden"
+              style={{ backgroundColor: theme.cardBackground }}
+            >
+              <SettingRow
+                icon="grid-outline"
+                title="Home Screen Widgets"
+                subtitle="Add habit cards to your home screen"
+                onPress={() => navigation.navigate('WidgetSettings')}
+                showChevron
+                rightComponent={
+                  <View 
+                    className="px-2 py-1 rounded-full mr-2"
+                    style={{ backgroundColor: theme.primary + '20' }}
+                  >
+                    <Text 
+                      className="text-xs font-medium"
+                      style={{ color: theme.primary }}
+                    >
+                      NEW
+                    </Text>
+                  </View>
+                }
+              />
+            </View>
+          </View>
+          
           {/* Data Management */}
           <View className="mb-6">
             <Text 

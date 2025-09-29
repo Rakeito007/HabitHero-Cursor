@@ -29,10 +29,15 @@
       "deploymentTarget": "15.0",
       "infoPlist": {
         "NSCameraUsageDescription": "Habit Hero uses the camera to let you take progress photos and visual reminders for your habits.",
-        "NSMicrophoneUsageDescription": "Habit Hero uses the microphone to record voice notes and audio reminders to help you track your habit progress."
+        "NSMicrophoneUsageDescription": "Habit Hero uses the microphone to record voice notes and audio reminders to help you track your habit progress.",
+        "NSSupportsAutomaticTermination": true,
+        "NSSupportsSuddenTermination": true
       },
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "entitlements": {
+        "com.apple.security.application-groups": ["group.com.vibecode.habithero"]
       }
     },
     "android": {

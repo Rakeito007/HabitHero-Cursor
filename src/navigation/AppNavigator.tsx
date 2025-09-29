@@ -14,6 +14,7 @@ import TermsOfUseScreen from '../screens/TermsOfUseScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import HabitTemplatesScreen from '../screens/HabitTemplatesScreen';
 import AchievementsScreen from '../screens/AchievementsScreen';
+import WidgetSettingsScreen from '../screens/WidgetSettingsScreen';
 
 import NutritionFitnessScreen from '../screens/NutritionFitnessScreen';
 
@@ -28,6 +29,7 @@ export type RootStackParamList = {
   Onboarding: undefined;
   HabitTemplates: undefined;
   Achievements: undefined;
+  WidgetSettings: undefined;
 
   NutritionFitness: undefined;
 };
@@ -102,6 +104,10 @@ const AppNavigator: React.FC = () => {
         component={AchievementsScreen}
       />
       
+      <Stack.Screen 
+        name="WidgetSettings" 
+        component={WidgetSettingsScreen}
+      />
 
       
       <Stack.Screen 
