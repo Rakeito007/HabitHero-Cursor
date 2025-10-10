@@ -1,0 +1,48 @@
+workflows:
+  ios-workflow:
+    name: Habit Hero iOS
+    max_build_duration: 120
+    environment:
+      vars:
+        XCODE_WORKSPACE: "ios/HabitHero.xcworkspace"
+        XCODE_SCHEME: "HabitHero"
+        BUNDLE_ID: "com.vibecode.habithero"
+        APP_STORE_CONNECT_ISSUER_ID: "your-issuer-id"
+        APP_STORE_CONNECT_KEY_IDENTIFIER: "your-key-id"
+        APP_STORE_CONNECT_PRIVATE_KEY: "your-private-key"
+      xcode: latest
+      cocoapods: default
+      node: 20
+    scripts:
+      - name: Set up keychain to be used for codesigning
+        script: |
+          keychain initialize
+      - name: Set up signing certificate
+        script: |
+          app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create
+      - name: Set up provisioning profile
+        script: |
+          app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create
+      - name: Install dependencies
+        script: |
+          npm install
+      - name: Install CocoaPods dependencies
+        script: |
+          cd ios && pod install
+      - name: Build ipa for distribution
+        script: |
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME" \
+            --destination "generic/platform=iOS"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - "Internal testers"
